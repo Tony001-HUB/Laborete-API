@@ -11,6 +11,12 @@ import java.util.UUID;
 
 @Service
 public class UsersService {
+    public static final String userNotFound = "User did not find with id:";
+    public static final String firstNameIsRequired = "The user name cannot be empty";
+    public static final String secondNameIsRequired = "The secondName cannot be empty";
+    public static final String positionIsRequired = "The position cannot be empty";
+    public static final String locationIsRequired = "The location cannot be empty";
+    public static final String uuidIsRequired = "The UUID cannot be empty";
     private final UsersRepository usersRepository;
 
     public UsersService(UsersRepository usersRepository) {
@@ -18,35 +24,27 @@ public class UsersService {
     }
 
     public Users getUserById(UUID uuid) {
-        try {
-            if (uuid == null) {
-                throw new ResourceBadRequestException(ConstantsHelper.uuidIsRequired);
-            }
-            return this.usersRepository.getUsersById(uuid);
-        } catch (Exception e) {
-            throw new ResourceServerErrorException(ConstantsHelper.serverUnavailable);
+        if (uuid == null) {
+            throw new ResourceBadRequestException(uuidIsRequired);
         }
+        return this.usersRepository.getUsersById(uuid);
     }
 
     public Users createUser(Users user) {
-        try {
-            if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
-                throw new ResourceBadRequestException(ConstantsHelper.firstNameIsRequired);
-            }
-            if (user.getSecondName() == null || user.getSecondName().isEmpty()) {
-                throw new ResourceBadRequestException(ConstantsHelper.secondNameIsRequired);
-            }
-            if (user.getLocation() == null || user.getLocation().isEmpty()) {
-                throw new ResourceBadRequestException(ConstantsHelper.locationIsRequired);
-            }
-            if (user.getPosition() == null || user.getPosition().isEmpty()) {
-                throw new ResourceBadRequestException(ConstantsHelper.positionIsRequired);
-            }
-
-            return this.usersRepository.save(user);
-        } catch (Exception e) {
-            throw new ResourceServerErrorException(ConstantsHelper.serverUnavailable);
+        if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
+            throw new ResourceBadRequestException(firstNameIsRequired);
         }
+        if (user.getSecondName() == null || user.getSecondName().isEmpty()) {
+            throw new ResourceBadRequestException(secondNameIsRequired);
+        }
+        if (user.getLocation() == null || user.getLocation().isEmpty()) {
+            throw new ResourceBadRequestException(locationIsRequired);
+        }
+        if (user.getPosition() == null || user.getPosition().isEmpty()) {
+            throw new ResourceBadRequestException(positionIsRequired);
+        }
+
+        return this.usersRepository.save(user);
     }
 
 }
