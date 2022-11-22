@@ -24,13 +24,13 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public Users getUserById(UUID uuid) {
-        if (uuid == null) {
+    public Users getUserById(UUID id) {
+        if (id == null) {
             throw new ResourceBadRequestException(UUID_IS_REQUIRED);
         }
-        Users user = this.usersRepository.getUsersById(uuid);
+        Users user = this.usersRepository.getUsersById(id);
         if (user == null) {
-            throw new ResourceNotFoundException(USER_NOT_FOUND + uuid);
+            throw new ResourceNotFoundException(USER_NOT_FOUND + id);
         }
         return user;
     }

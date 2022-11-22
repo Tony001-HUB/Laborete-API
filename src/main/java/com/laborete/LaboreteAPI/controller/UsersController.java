@@ -17,9 +17,9 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @GetMapping("/{uuid}")
-    private ResponseEntity<Users> getUserById(@PathVariable UUID uuid) {
-        return new ResponseEntity<>(this.usersService.getUserById(uuid), HttpStatus.OK);
+    @GetMapping("/{id}")
+    private ResponseEntity<Users> getUserById(@PathVariable UUID id) {
+        return new ResponseEntity<>(this.usersService.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping()
