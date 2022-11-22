@@ -1,4 +1,4 @@
-package com.laborete.LaboreteAPI.modal;
+package com.laborete.LaboreteAPI.models;
 
 public class ErrorResponse {
     private String error;

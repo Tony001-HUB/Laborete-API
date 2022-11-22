@@ -1,4 +1,4 @@
-package com.laborete.LaboreteAPI.modal;
+package com.laborete.LaboreteAPI.services;
 
 import com.laborete.LaboreteAPI.entity.UserEntity;
 
