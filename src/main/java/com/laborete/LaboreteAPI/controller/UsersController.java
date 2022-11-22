@@ -17,7 +17,7 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
+    @GetMapping("/{uuid}")
     private ResponseEntity<Users> getUserById(@PathVariable UUID uuid) {
         return new ResponseEntity<>(this.usersService.getUserById(uuid), HttpStatus.OK);
     }

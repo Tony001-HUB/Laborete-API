@@ -12,7 +12,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceBadRequestException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(ResourceBadRequestException ex) {
         ErrorResponse error = new ErrorResponse();
-        error.setError(ex.getMessage());
+        error.setError(ex.getErrorMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEntityNotFound(ResourceNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse();
+        error.setError(ex.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

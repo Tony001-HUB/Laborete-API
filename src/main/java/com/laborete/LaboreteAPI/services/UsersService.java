@@ -2,6 +2,7 @@ package com.laborete.LaboreteAPI.services;
 
 import com.laborete.LaboreteAPI.entity.Users;
 import com.laborete.LaboreteAPI.exception.ResourceBadRequestException;
+import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
 import com.laborete.LaboreteAPI.exception.ResourceServerErrorException;
 import com.laborete.LaboreteAPI.repository.UsersRepository;
 import com.laborete.LaboreteAPI.constants.ConstantsHelper;
@@ -27,7 +28,11 @@ public class UsersService {
         if (uuid == null) {
             throw new ResourceBadRequestException(uuidIsRequired);
         }
-        return this.usersRepository.getUsersById(uuid);
+        Users user = this.usersRepository.getUsersById(uuid);
+        if (user == null) {
+            throw new ResourceNotFoundException(userNotFound + uuid);
+        }
+        return user;
     }
 
     public Users createUser(Users user) {
