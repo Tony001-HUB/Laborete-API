@@ -26,7 +26,7 @@ public class UsersService {
         if (id == null) {
             throw new ResourceBadRequestException(UUID_IS_REQUIRED);
         }
-        UserEntity user = this.usersRepository.getUsersById(id);
+        UserEntity user = this.usersRepository.getUserById(id);
         if (user == null) {
             throw new ResourceNotFoundException(USER_NOT_FOUND + id);
         }
