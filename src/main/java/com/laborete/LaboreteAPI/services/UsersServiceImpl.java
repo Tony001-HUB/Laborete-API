@@ -3,7 +3,6 @@ package com.laborete.LaboreteAPI.services;
 import com.laborete.LaboreteAPI.entity.UserEntity;
 import com.laborete.LaboreteAPI.exception.ResourceBadRequestException;
 import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
-import com.laborete.LaboreteAPI.modal.UsersService;
 import com.laborete.LaboreteAPI.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 
