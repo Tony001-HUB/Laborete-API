@@ -1,7 +1,7 @@
 package com.laborete.LaboreteAPI.controller;
 
 import com.laborete.LaboreteAPI.entity.UserEntity;
-import com.laborete.LaboreteAPI.services.UsersService;
+import com.laborete.LaboreteAPI.modal.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

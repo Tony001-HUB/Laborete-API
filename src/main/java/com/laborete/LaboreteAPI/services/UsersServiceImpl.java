@@ -3,13 +3,14 @@ package com.laborete.LaboreteAPI.services;
 import com.laborete.LaboreteAPI.entity.UserEntity;
 import com.laborete.LaboreteAPI.exception.ResourceBadRequestException;
 import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
+import com.laborete.LaboreteAPI.modal.UsersService;
 import com.laborete.LaboreteAPI.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class UsersService {
+public class UsersServiceImpl implements UsersService {
     private static final String USER_NOT_FOUND = "User did not find with id:";
     private static final String FIRST_NAME_IS_REQUIRED = "The user name cannot be empty";
     private static final String SECOND_NAME_IS_REQUIRED = "The secondName cannot be empty";
@@ -18,7 +19,7 @@ public class UsersService {
     private static final String UUID_IS_REQUIRED = "The UUID cannot be empty";
     private final UsersRepository usersRepository;
 
-    public UsersService(UsersRepository usersRepository) {
+    public UsersServiceImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
 
