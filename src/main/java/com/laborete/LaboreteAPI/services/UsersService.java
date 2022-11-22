@@ -1,11 +1,9 @@
 package com.laborete.LaboreteAPI.services;
 
-import com.laborete.LaboreteAPI.entity.Users;
+import com.laborete.LaboreteAPI.entity.UserEntity;
 import com.laborete.LaboreteAPI.exception.ResourceBadRequestException;
 import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
-import com.laborete.LaboreteAPI.exception.ResourceServerErrorException;
 import com.laborete.LaboreteAPI.repository.UsersRepository;
-import com.laborete.LaboreteAPI.constants.ConstantsHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -24,18 +22,18 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public Users getUserById(UUID id) {
+    public UserEntity getUserById(UUID id) {
         if (id == null) {
             throw new ResourceBadRequestException(UUID_IS_REQUIRED);
         }
-        Users user = this.usersRepository.getUsersById(id);
+        UserEntity user = this.usersRepository.getUsersById(id);
         if (user == null) {
             throw new ResourceNotFoundException(USER_NOT_FOUND + id);
         }
         return user;
     }
 
-    public Users createUser(Users user) {
+    public UserEntity createUser(UserEntity user) {
         if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
             throw new ResourceBadRequestException(FIRST_NAME_IS_REQUIRED);
         }

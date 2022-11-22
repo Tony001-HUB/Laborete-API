@@ -1,6 +1,6 @@
 package com.laborete.LaboreteAPI.controller;
 
-import com.laborete.LaboreteAPI.entity.Users;
+import com.laborete.LaboreteAPI.entity.UserEntity;
 import com.laborete.LaboreteAPI.services.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +18,12 @@ public class UsersController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Users> getUserById(@PathVariable UUID id) {
+    private ResponseEntity<UserEntity> getUserById(@PathVariable UUID id) {
         return new ResponseEntity<>(this.usersService.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping()
-    private ResponseEntity<Users> createUser(@RequestBody Users users) {
-        return new ResponseEntity<>(this.usersService.createUser(users), HttpStatus.CREATED);
+    private ResponseEntity<UserEntity> createUser(@RequestBody UserEntity userEntity) {
+        return new ResponseEntity<>(this.usersService.createUser(userEntity), HttpStatus.CREATED);
     }
 }

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity
-public class Users {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
