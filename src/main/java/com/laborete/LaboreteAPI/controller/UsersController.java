@@ -29,7 +29,10 @@ public class UsersController {
     }
 
     @RequestMapping(value="/upload-avatar", method=RequestMethod.POST)
-    private String uploadUserAvatar(@RequestParam("name") String name, @RequestParam("file") MultipartFile file) {
-        return this.usersService.uploadUserAvatar(name,file);
+    private String uploadUserAvatar(
+            @RequestParam("name") String name,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userId") UUID userId) {
+        return this.usersService.uploadUserAvatar(name, file, userId);
     }
 }

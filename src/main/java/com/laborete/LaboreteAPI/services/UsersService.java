@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface UsersService {
     UserEntity getUserById(UUID id);
     UserEntity createUser(UserEntity user);
-    String uploadUserAvatar(String name, MultipartFile file);
+    String uploadUserAvatar(String name, MultipartFile file, UUID userId);
 }

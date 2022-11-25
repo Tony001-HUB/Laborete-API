@@ -63,12 +63,17 @@ public class UsersServiceImpl implements UsersService {
         return this.usersRepository.save(user);
     }
 
-    public String uploadUserAvatar(String name, MultipartFile file) {
+    public String uploadUserAvatar(String name, MultipartFile file, UUID userId) {
+        UserEntity user = this.usersRepository.getUserById(userId);
+
         if (file.isEmpty()) {
             throw new ResourceBadRequestException(FILE_IS_EMPTY);
         }
         if (name.isBlank() || name.isEmpty()) {
             throw new ResourceBadRequestException(FILE_NAME_IS_EMPTY);
+        }
+        if (user == null) {
+            throw new ResourceNotFoundException(USER_NOT_FOUND + userId);
         }
 
         try {
@@ -83,7 +88,10 @@ public class UsersServiceImpl implements UsersService {
             stream.write(bytes);
             stream.close();
 
-            this.userAvatarRepository.save(new UserAvatarEntity(uuid, name));
+            UserAvatarEntity userAvatarEntity = new UserAvatarEntity(uuid, name, file.getSize());
+            user.setUserAvatarEntity(userAvatarEntity);
+            this.usersRepository.save(user);
+            this.userAvatarRepository.save(userAvatarEntity);
 
             return "Avatar has been uploaded";
         } catch (Exception e) {
