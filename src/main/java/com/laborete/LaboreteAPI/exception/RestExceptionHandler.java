@@ -24,9 +24,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ResourceFileUploadErrorException.class)
-    public ResponseEntity<ErrorResponse> handleEntityNotFound(ResourceFileUploadErrorException ex) {
+    public ResponseEntity<ErrorResponse> handleErrorFileUpload(ResourceFileUploadErrorException ex) {
         ErrorResponse error = new ErrorResponse();
         error.setError(ex.getErrorMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

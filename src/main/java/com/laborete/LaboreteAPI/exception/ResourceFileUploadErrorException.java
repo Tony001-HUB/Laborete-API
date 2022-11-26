@@ -4,7 +4,7 @@ public class ResourceFileUploadErrorException extends RuntimeException {
     private String errorMessage;
     public ResourceFileUploadErrorException(String message){
         super(message);
-        this.setErrorMessage(message);
+        this.errorMessage = message;
     }
 
     public String getErrorMessage() {
