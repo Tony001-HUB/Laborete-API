@@ -26,6 +26,10 @@ public class UserEntity {
     @Column
     private String generalInfo;
 
+    @OneToOne (cascade=CascadeType.ALL)
+    @JoinColumn (name="avatar_id")
+    private UserAvatarEntity userAvatarEntity;
+
 
     public UUID getId() {
         return id;
@@ -73,5 +77,13 @@ public class UserEntity {
 
     public void setGeneralInfo(String generalInfo) {
         this.generalInfo = generalInfo;
+    }
+
+    public UserAvatarEntity getUserAvatarEntity() {
+        return userAvatarEntity;
+    }
+
+    public void setUserAvatarEntity(UserAvatarEntity userAvatarEntity) {
+        this.userAvatarEntity = userAvatarEntity;
     }
 }

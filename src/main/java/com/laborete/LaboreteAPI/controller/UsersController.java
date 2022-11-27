@@ -5,6 +5,7 @@ import com.laborete.LaboreteAPI.services.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -25,5 +26,13 @@ public class UsersController {
     @PostMapping()
     private ResponseEntity<UserEntity> createUser(@RequestBody UserEntity userEntity) {
         return new ResponseEntity<>(this.usersService.createUser(userEntity), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value="/upload-avatar", method=RequestMethod.POST)
+    private ResponseEntity<HttpStatus> uploadUserAvatar(
+            @RequestParam("name") String name,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userId") UUID userId) {
+        return this.usersService.uploadUserAvatar(name, file, userId);
     }
 }

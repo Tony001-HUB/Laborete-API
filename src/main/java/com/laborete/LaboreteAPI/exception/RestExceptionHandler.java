@@ -22,4 +22,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         error.setError(ex.getErrorMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ResourceFileUploadErrorException.class)
+    public ResponseEntity<ErrorResponse> handleErrorFileUpload(ResourceFileUploadErrorException ex) {
+        ErrorResponse error = new ErrorResponse();
+        error.setError(ex.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
