@@ -106,7 +106,7 @@ public class UsersServiceImpl implements UsersService {
 
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            throw new ResourceFileUploadErrorException(FILE_FAILED_UPLOAD + e.getMessage());
+            throw new ResourceFileUploadErrorException(FILE_FAILED_UPLOAD, e);
         }
     }
 
