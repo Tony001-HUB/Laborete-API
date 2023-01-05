@@ -1,8 +1,7 @@
 package com.laborete.LaboreteAPI.profile.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity

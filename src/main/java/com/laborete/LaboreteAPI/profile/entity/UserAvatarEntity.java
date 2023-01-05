@@ -1,6 +1,6 @@
 package com.laborete.LaboreteAPI.profile.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
