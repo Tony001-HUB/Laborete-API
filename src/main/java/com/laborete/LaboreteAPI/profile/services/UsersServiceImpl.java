@@ -5,7 +5,7 @@ import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import com.laborete.LaboreteAPI.profile.exception.ResourceBadRequestException;
 import com.laborete.LaboreteAPI.profile.exception.ResourceFileUploadErrorException;
 import com.laborete.LaboreteAPI.profile.exception.ResourceNotFoundException;
-import com.laborete.LaboreteAPI.profile.mappers.MapStructMapper;
+import com.laborete.LaboreteAPI.profile.mappers.UserMapper;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.repository.UserAvatarRepository;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
@@ -38,18 +38,18 @@ public class UsersServiceImpl implements UsersService {
     private static final String ERROR_CREATING_DIRECTORY = "The directory was not created";
     private final UsersRepository usersRepository;
     private final UserAvatarRepository userAvatarRepository;
-    private final MapStructMapper mapstructMapper;
+    private final UserMapper userMapper;
     @Value("${directory.path}")
     private String ROOT_PATH;
 
     public UsersServiceImpl(
             UsersRepository usersRepository,
             UserAvatarRepository userAvatarRepository,
-            MapStructMapper mapstructMapper
+            UserMapper userMapper
     ) {
         this.usersRepository = usersRepository;
         this.userAvatarRepository = userAvatarRepository;
-        this.mapstructMapper = mapstructMapper;
+        this.userMapper = userMapper;
     }
 
     public UserEntity getUserById(UUID id) {
@@ -64,7 +64,7 @@ public class UsersServiceImpl implements UsersService {
         return user;
     }
 
-    public UserEntity createUser(UserDTO user) {
+    public UserDTO createUser(UserDTO user) {
         if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
             throw new ResourceBadRequestException(FIRST_NAME_IS_REQUIRED);
         }
@@ -78,7 +78,9 @@ public class UsersServiceImpl implements UsersService {
             throw new ResourceBadRequestException(POSITION_IS_REQUIRED);
         }
 
-        return this.usersRepository.save(mapstructMapper.userDTOToUserEntity(user));
+        return this.userMapper.userEntityToUserDto(
+                this.usersRepository.save(userMapper.userDTOToUserEntity(user))
+        );
     }
 
     @Transactional

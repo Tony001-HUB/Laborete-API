@@ -1,7 +1,6 @@
 package com.laborete.LaboreteAPI.profile.controller;
 
 import com.laborete.LaboreteAPI.profile.entity.UserEntity;
-import com.laborete.LaboreteAPI.profile.mappers.MapStructMapper;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
 import io.swagger.annotations.Api;
@@ -19,11 +18,11 @@ import java.util.UUID;
 @Api(value = "Users", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"Users"}, description = "Users Controller")
 public class UsersController {
     private final UsersService usersService;
-    private final MapStructMapper mapstructMapper;
 
-    public UsersController(UsersService usersService, MapStructMapper mapstructMapper) {
+    public UsersController(
+            UsersService usersService
+    ) {
         this.usersService = usersService;
-        this.mapstructMapper = mapstructMapper;
     }
 
     @ApiOperation(value = "Get user by id")
@@ -34,9 +33,9 @@ public class UsersController {
 
     @ApiOperation(value = "Create new user")
     @PostMapping()
-    private ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userEntity) {
+    private ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
         return new ResponseEntity<>(
-                this.mapstructMapper.UserEntityToUserDto(usersService.createUser(userEntity)), HttpStatus.CREATED
+                usersService.createUser(user), HttpStatus.CREATED
         );
     }
 

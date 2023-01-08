@@ -10,6 +10,6 @@ import java.util.UUID;
 
 public interface UsersService {
     UserEntity getUserById(UUID id);
-    UserEntity createUser(UserDTO user);
+    UserDTO createUser(UserDTO user);
     ResponseEntity<HttpStatus> uploadUserAvatar(String name, MultipartFile file, UUID userId);
 }
