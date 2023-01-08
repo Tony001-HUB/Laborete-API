@@ -20,8 +20,6 @@ public class UserAvatarEntity {
     @Column
     private Long size;
 
-    @OneToOne(mappedBy="userAvatarEntity")
-    private UserEntity userEntity;
 
     public UserAvatarEntity(UUID id, String name, Long size) {
         this.id = id;

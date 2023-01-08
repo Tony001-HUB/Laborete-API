@@ -1,6 +1,7 @@
 package com.laborete.LaboreteAPI.profile.mappers;
 
 import com.laborete.LaboreteAPI.profile.entity.UserEntity;
+import com.laborete.LaboreteAPI.profile.models.CreateUserDTO;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import org.mapstruct.Mapper;
 
@@ -8,6 +9,7 @@ import org.mapstruct.Mapper;
         componentModel = "spring"
 )
 public interface UserMapper {
-    UserEntity userDTOToUserEntity(UserDTO user);
+    UserEntity createUserDTOToUserEntity(CreateUserDTO user);
+    CreateUserDTO createUserEntityToUserDto(UserEntity user);
     UserDTO userEntityToUserDto(UserEntity user);
 }
