@@ -1,8 +1,13 @@
 package com.laborete.LaboreteAPI.profile.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.UUID;
 
+@Setter
+@Getter
 @Entity
 public class UserAvatarEntity {
     @Id
@@ -15,8 +20,6 @@ public class UserAvatarEntity {
     @Column
     private Long size;
 
-    @OneToOne(mappedBy="userAvatarEntity")
-    private UserEntity userEntity;
 
     public UserAvatarEntity(UUID id, String name, Long size) {
         this.id = id;
@@ -24,31 +27,5 @@ public class UserAvatarEntity {
         this.size = size;
     }
 
-    public UserAvatarEntity() {
-
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
+    public UserAvatarEntity() {}
 }

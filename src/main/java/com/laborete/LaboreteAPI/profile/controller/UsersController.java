@@ -1,6 +1,8 @@
 package com.laborete.LaboreteAPI.profile.controller;
 
 import com.laborete.LaboreteAPI.profile.entity.UserEntity;
+import com.laborete.LaboreteAPI.profile.models.CreateUserDTO;
+import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,20 +20,24 @@ import java.util.UUID;
 public class UsersController {
     private final UsersService usersService;
 
-    public UsersController(UsersService usersService) {
+    public UsersController(
+            UsersService usersService
+    ) {
         this.usersService = usersService;
     }
 
     @ApiOperation(value = "Get user by id")
     @GetMapping("/{id}")
-    private ResponseEntity<UserEntity> getUserById(@PathVariable UUID id) {
+    private ResponseEntity<UserDTO> getUserById(@PathVariable UUID id) {
         return new ResponseEntity<>(this.usersService.getUserById(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Create new user")
     @PostMapping()
-    private ResponseEntity<UserEntity> createUser(@RequestBody UserEntity userEntity) {
-        return new ResponseEntity<>(this.usersService.createUser(userEntity), HttpStatus.CREATED);
+    private ResponseEntity<UserDTO> createUser(@RequestBody CreateUserDTO user) {
+        return new ResponseEntity<>(
+                usersService.createUser(user), HttpStatus.CREATED
+        );
     }
 
     @ApiOperation(value = "Upload avatar to user")

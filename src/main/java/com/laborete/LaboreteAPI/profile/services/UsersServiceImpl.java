@@ -5,6 +5,9 @@ import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import com.laborete.LaboreteAPI.profile.exception.ResourceBadRequestException;
 import com.laborete.LaboreteAPI.profile.exception.ResourceFileUploadErrorException;
 import com.laborete.LaboreteAPI.profile.exception.ResourceNotFoundException;
+import com.laborete.LaboreteAPI.profile.mappers.UserMapper;
+import com.laborete.LaboreteAPI.profile.models.CreateUserDTO;
+import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.repository.UserAvatarRepository;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
 import com.laborete.LaboreteAPI.shared.common.FileUtils;
@@ -36,15 +39,21 @@ public class UsersServiceImpl implements UsersService {
     private static final String ERROR_CREATING_DIRECTORY = "The directory was not created";
     private final UsersRepository usersRepository;
     private final UserAvatarRepository userAvatarRepository;
+    private final UserMapper userMapper;
     @Value("${directory.path}")
     private String ROOT_PATH;
 
-    public UsersServiceImpl(UsersRepository usersRepository, UserAvatarRepository userAvatarRepository) {
+    public UsersServiceImpl(
+            UsersRepository usersRepository,
+            UserAvatarRepository userAvatarRepository,
+            UserMapper userMapper
+    ) {
         this.usersRepository = usersRepository;
         this.userAvatarRepository = userAvatarRepository;
+        this.userMapper = userMapper;
     }
 
-    public UserEntity getUserById(UUID id) {
+    public UserDTO getUserById(UUID id) {
         if (id == null) {
             throw new ResourceBadRequestException(UUID_IS_REQUIRED);
         }
@@ -53,10 +62,10 @@ public class UsersServiceImpl implements UsersService {
                 () -> new ResourceNotFoundException(USER_NOT_FOUND + id)
         );;
 
-        return user;
+        return this.userMapper.userEntityToUserDto(user);
     }
 
-    public UserEntity createUser(UserEntity user) {
+    public UserDTO createUser(CreateUserDTO user) {
         if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
             throw new ResourceBadRequestException(FIRST_NAME_IS_REQUIRED);
         }
@@ -70,7 +79,9 @@ public class UsersServiceImpl implements UsersService {
             throw new ResourceBadRequestException(POSITION_IS_REQUIRED);
         }
 
-        return this.usersRepository.save(user);
+        return this.userMapper.userEntityToUserDto(
+                this.usersRepository.save(userMapper.createUserDTOToUserEntity(user))
+        );
     }
 
     @Transactional
