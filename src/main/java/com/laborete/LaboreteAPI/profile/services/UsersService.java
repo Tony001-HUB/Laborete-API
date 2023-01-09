@@ -1,6 +1,5 @@
 package com.laborete.LaboreteAPI.profile.services;
 
-import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import com.laborete.LaboreteAPI.profile.models.CreateUserDTO;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,6 @@ import java.util.UUID;
 
 public interface UsersService {
     UserDTO getUserById(UUID id);
-    CreateUserDTO createUser(CreateUserDTO user);
+    UserDTO createUser(CreateUserDTO user);
     ResponseEntity<HttpStatus> uploadUserAvatar(String name, MultipartFile file, UUID userId);
 }

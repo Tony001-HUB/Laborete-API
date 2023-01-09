@@ -34,7 +34,7 @@ public class UsersController {
 
     @ApiOperation(value = "Create new user")
     @PostMapping()
-    private ResponseEntity<CreateUserDTO> createUser(@RequestBody CreateUserDTO user) {
+    private ResponseEntity<UserDTO> createUser(@RequestBody CreateUserDTO user) {
         return new ResponseEntity<>(
                 usersService.createUser(user), HttpStatus.CREATED
         );

@@ -65,7 +65,7 @@ public class UsersServiceImpl implements UsersService {
         return this.userMapper.userEntityToUserDto(user);
     }
 
-    public CreateUserDTO createUser(CreateUserDTO user) {
+    public UserDTO createUser(CreateUserDTO user) {
         if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
             throw new ResourceBadRequestException(FIRST_NAME_IS_REQUIRED);
         }
@@ -79,7 +79,7 @@ public class UsersServiceImpl implements UsersService {
             throw new ResourceBadRequestException(POSITION_IS_REQUIRED);
         }
 
-        return this.userMapper.createUserEntityToUserDto(
+        return this.userMapper.userEntityToUserDto(
                 this.usersRepository.save(userMapper.createUserDTOToUserEntity(user))
         );
     }
