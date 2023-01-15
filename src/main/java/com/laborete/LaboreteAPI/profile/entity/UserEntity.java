@@ -1,10 +1,12 @@
 package com.laborete.LaboreteAPI.profile.entity;
 
+import com.laborete.LaboreteAPI.posts.entity.PostEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -34,4 +36,7 @@ public class UserEntity {
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn (name="avatar_id")
     private UserAvatarEntity userAvatarEntity;
+
+    @OneToMany(mappedBy = "user")
+    private Set<PostEntity> posts;
 }
