@@ -1,4 +1,4 @@
-package com.laborete.LaboreteAPI.profile.exception;
+package com.laborete.LaboreteAPI.exception;
 
 import com.laborete.LaboreteAPI.profile.models.ErrorResponse;
 import org.springframework.http.HttpStatus;

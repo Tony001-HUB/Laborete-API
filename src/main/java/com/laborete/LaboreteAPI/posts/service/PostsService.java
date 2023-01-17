@@ -8,8 +8,8 @@ import java.util.UUID;
 public interface PostsService {
     List<PostDTO> getAllPosts();
 
-    PostDTO createPost(CreatePostDTO user);
+    PostDTO createPost(CreatePostDTO post);
 
-    PostDTO findById(UUID id);
+    PostDTO getPostById(UUID id);
 }
 

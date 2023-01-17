@@ -27,11 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class PostsController {
     @Autowired
-    private final PostsService postsService;
-
-    public PostsController(PostsService postsService) {
-        this.postsService = postsService;
-    }
+    private PostsService postsService;
 
     @ApiOperation("Get all posts")
     @GetMapping({""})

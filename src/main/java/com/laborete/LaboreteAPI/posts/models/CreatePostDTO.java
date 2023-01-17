@@ -11,12 +11,8 @@ import java.util.UUID;
 @Setter
 public class CreatePostDTO {
 
-    @JsonProperty("id")
-    private UUID id;
     @JsonProperty("text")
     private String text;
-    @JsonProperty("creationTime")
-    private LocalDateTime creationDate;
     @JsonProperty("user_id")
     private UUID userId;
 

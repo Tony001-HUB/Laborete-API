@@ -1,4 +1,4 @@
-package com.laborete.LaboreteAPI.profile.exception;
+package com.laborete.LaboreteAPI.exception;
 
 public class ResourceFileUploadErrorException extends RuntimeException {
     private String errorMessage;

@@ -17,16 +17,8 @@ public class PostDTO {
     private String text;
     @JsonProperty("date")
     private LocalDateTime creationDate = LocalDateTime.now();
-    @JsonProperty("userId")
-    private UUID userId;
-    @JsonProperty("userFirstName")
-    private String userFirstName;
-    @JsonProperty("userSecondName")
-    private String userSecondName;
-    @JsonProperty("userPosition")
-    private String userPosition;
-    @JsonProperty("userAvatarEntity")
-    private UserAvatarDTO userAvatarDTO;
+    @JsonProperty("author")
+    private AuthorDTO authorDTO;
 
 }
 

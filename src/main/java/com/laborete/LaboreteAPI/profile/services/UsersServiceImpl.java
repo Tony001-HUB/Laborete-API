@@ -2,9 +2,9 @@ package com.laborete.LaboreteAPI.profile.services;
 
 import com.laborete.LaboreteAPI.profile.entity.UserAvatarEntity;
 import com.laborete.LaboreteAPI.profile.entity.UserEntity;
-import com.laborete.LaboreteAPI.profile.exception.ResourceBadRequestException;
-import com.laborete.LaboreteAPI.profile.exception.ResourceFileUploadErrorException;
-import com.laborete.LaboreteAPI.profile.exception.ResourceNotFoundException;
+import com.laborete.LaboreteAPI.exception.ResourceBadRequestException;
+import com.laborete.LaboreteAPI.exception.ResourceFileUploadErrorException;
+import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
 import com.laborete.LaboreteAPI.profile.mappers.UserMapper;
 import com.laborete.LaboreteAPI.profile.models.CreateUserDTO;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
