@@ -10,6 +10,7 @@ import com.laborete.LaboreteAPI.exception.ResourceBadRequestException;
 import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
 import com.laborete.LaboreteAPI.profile.mappers.UserMapper;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
+import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,18 +30,21 @@ public class PostsServiceImpl implements PostsService {
     @Autowired
     private PostRepository postRepository;
     @Autowired
+    private UsersRepository usersRepository;
+    @Autowired
     private UsersService usersService;
     @Autowired
     private PostMapper postMapper;
     @Autowired
     private UserMapper userMapper;
 
-    public PostsServiceImpl() {
+    public PostsServiceImpl(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 
     public List<PostDTO> getAllPosts() {
         List<PostEntity> postEntities = postRepository.findAll();
-        List<PostDTO> postDTOList = postEntities.stream().map(postMapper::postEntityToPostDTO).collect(Collectors.toList());
+        List<PostDTO> postDTOList = postMapper.postEntitiesListToPostDTOList(postEntities);
         int k = 0;
         for (PostDTO postDTO : postDTOList ) {
             postDTO.setAuthorDTO(postMapper.userEntityToAuthorDTO(postEntities.get(k).getUser()));
@@ -57,7 +61,7 @@ public class PostsServiceImpl implements PostsService {
             throw new ResourceBadRequestException(USER_CREATOR_IS_REQUIRED);
         }
 
-        UserEntity user = userMapper.userDTOToUserEntity(usersService.getUserById(post.getUserId()));
+        UserEntity user = usersRepository.getUserById(post.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User was not found with id:" + post.getUserId()) );
         PostEntity postEntity = postMapper.createPostDTOToPostEntity(post);
         postEntity.setCreationDate(LocalDateTime.now());
         postEntity.setUser(user);

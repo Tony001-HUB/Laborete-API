@@ -44,7 +44,7 @@ public class PostsController {
     @ApiOperation("Get post by id")
     @GetMapping({"/{id}"})
     private ResponseEntity<PostDTO> getPostById(@PathVariable UUID id) {
-        return new ResponseEntity<>(this.postsService.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(this.postsService.getPostById(id), HttpStatus.OK);
     }
 
 }
