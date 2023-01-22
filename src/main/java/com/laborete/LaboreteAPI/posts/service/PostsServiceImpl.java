@@ -38,9 +38,6 @@ public class PostsServiceImpl implements PostsService {
     @Autowired
     private UserMapper userMapper;
 
-    public PostsServiceImpl(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
 
     public List<PostDTO> getAllPosts() {
         List<PostEntity> postEntities = postRepository.findAll();
