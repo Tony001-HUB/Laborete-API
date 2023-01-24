@@ -41,13 +41,7 @@ public class PostsServiceImpl implements PostsService {
 
     public List<PostDTO> getAllPosts() {
         List<PostEntity> postEntities = postRepository.findAll();
-        List<PostDTO> postDTOList = postMapper.postEntitiesListToPostDTOList(postEntities);
-        int k = 0;
-        for (PostDTO postDTO : postDTOList ) {
-            postDTO.setAuthorDTO(postMapper.userEntityToAuthorDTO(postEntities.get(k).getUser()));
-            k++;
-        }
-        return postDTOList;
+        return postMapper.postEntitiesListToPostDTOList(postEntities);
     }
 
     public PostDTO createPost(CreatePostDTO post) {
@@ -74,9 +68,7 @@ public class PostsServiceImpl implements PostsService {
             throw new ResourceBadRequestException("Can`t find post without ID");
         }
         PostEntity postEntity = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post was not found with id:" + id));
-        PostDTO postDTO = this.postMapper.postEntityToPostDTO(postEntity);
-        postDTO.setAuthorDTO(postMapper.userEntityToAuthorDTO(postEntity.getUser()));
-        return postDTO;
+        return postMapper.postEntityToPostDTO(postEntity);
 
     }
 }

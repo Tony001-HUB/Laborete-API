@@ -6,6 +6,7 @@ import com.laborete.LaboreteAPI.posts.models.CreatePostDTO;
 import com.laborete.LaboreteAPI.posts.models.PostDTO;
 import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public interface PostMapper {
     PostEntity createPostDTOToPostEntity(CreatePostDTO post);
 
+    @Mapping(target = "authorDTO", source = "user")
     PostDTO postEntityToPostDTO(PostEntity post);
 
     PostEntity postDTOToPostEntity(PostDTO post);
