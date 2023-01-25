@@ -13,7 +13,7 @@ public class CreatePostDTO {
 
     @JsonProperty("text")
     private String text;
-    @JsonProperty("user_id")
+    @JsonProperty("user-id")
     private UUID userId;
 
 }
