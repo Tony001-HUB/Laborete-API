@@ -48,4 +48,15 @@ public class UsersController {
             @RequestParam("userId") UUID userId) {
         return this.usersService.uploadUserAvatar(name, file, userId);
     }
+
+
+    @ApiOperation(value = "Upload background image to user")
+    @RequestMapping(value="/upload-background", method=RequestMethod.POST)
+    private ResponseEntity<HttpStatus> uploadUserBackground(
+            @RequestParam("name") String name,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userId") UUID userId) {
+        return usersService.uploadUserBackground(name, file, userId);
+    }
+
 }

@@ -12,4 +12,6 @@ public interface UsersService {
     UserDTO getUserById(UUID id);
     UserDTO createUser(CreateUserDTO user);
     ResponseEntity<HttpStatus> uploadUserAvatar(String name, MultipartFile file, UUID userId);
+    ResponseEntity<HttpStatus> uploadUserBackground(String name, MultipartFile file, UUID userId);
+
 }

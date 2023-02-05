@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserAvatarDTO {
+public class UserBackgroundDTO {
     @JsonProperty("id")
     private UUID id;
     @JsonProperty("name")
