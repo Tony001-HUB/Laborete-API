@@ -1,13 +1,17 @@
 package com.laborete.LaboreteAPI.profile.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
     @JsonProperty("id")
     private UUID id;
@@ -21,6 +25,8 @@ public class UserDTO {
     private String location;
     @JsonProperty("generalInfo")
     private String generalInfo;
-    @JsonProperty("userAvatarEntity")
-    private UserAvatarDTO userAvatarEntity;
+    @JsonProperty("userAvatar")
+    private ImageDTO userAvatar;
+    @JsonProperty("userBackground")
+    private ImageDTO userBackground;
 }

@@ -1,6 +1,7 @@
 package com.laborete.LaboreteAPI.profile.entity;
 
 import com.laborete.LaboreteAPI.posts.entity.PostEntity;
+import com.laborete.LaboreteAPI.profile.models.UserBackgroundDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,9 +34,13 @@ public class UserEntity {
     @Column
     private String generalInfo;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn (name="avatar_id")
+    @OneToOne(cascade=CascadeType.MERGE)
+    @JoinColumn (name = "avatar_id")
     private UserAvatarEntity userAvatarEntity;
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn (name = "background_id")
+    private UserBackgroundEntity userBackgroundEntity;
 
     @OneToMany(mappedBy = "user")
     private Set<PostEntity> posts;
