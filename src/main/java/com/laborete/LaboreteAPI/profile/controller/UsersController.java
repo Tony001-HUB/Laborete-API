@@ -1,6 +1,5 @@
 package com.laborete.LaboreteAPI.profile.controller;
 
-import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import com.laborete.LaboreteAPI.profile.models.CreateUserDTO;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
@@ -41,7 +40,7 @@ public class UsersController {
     }
 
     @ApiOperation(value = "Upload avatar to user")
-    @RequestMapping(value="/upload-avatar", method=RequestMethod.POST)
+    @RequestMapping(value = "/upload-avatar", method = RequestMethod.POST)
     private ResponseEntity<HttpStatus> uploadUserAvatar(
             @RequestParam("name") String name,
             @RequestParam("file") MultipartFile file,
@@ -51,7 +50,7 @@ public class UsersController {
 
 
     @ApiOperation(value = "Upload background image to user")
-    @RequestMapping(value="/upload-background", method=RequestMethod.POST)
+    @RequestMapping(value = "/upload-background", method = RequestMethod.POST)
     private ResponseEntity<HttpStatus> uploadUserBackground(
             @RequestParam("name") String name,
             @RequestParam("file") MultipartFile file,

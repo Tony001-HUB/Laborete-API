@@ -17,8 +17,8 @@ public class ImageDTO {
     private UUID id;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("extension")
-    private String extension;
-    @JsonProperty("bytes")
-    private byte[] bytes;
+    @JsonProperty("base64")
+    private String base64;
+    @JsonProperty("mimeType")
+    private String mimeType;
 }

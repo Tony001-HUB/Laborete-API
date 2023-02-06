@@ -2,7 +2,8 @@ package com.laborete.LaboreteAPI.exception;
 
 public class ResourceBadRequestException extends RuntimeException {
     private String errorMessage;
-    public ResourceBadRequestException(String errorMessage){
+
+    public ResourceBadRequestException(String errorMessage) {
         super(errorMessage);
         this.setErrorMessage(errorMessage);
     }

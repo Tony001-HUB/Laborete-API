@@ -3,7 +3,9 @@ package com.laborete.LaboreteAPI.profile.models;
 public class ErrorResponse {
     private String error;
 
-    public ErrorResponse() {}
+    public ErrorResponse() {
+    }
+
     public String getError() {
         return error;
     }

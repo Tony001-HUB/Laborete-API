@@ -21,12 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -82,10 +84,10 @@ public class UsersServiceImpl implements UsersService {
         );
         UserDTO userDTO = userMapper.userEntityToUserDto(user);
         if (userDTO.getUserAvatar() != null) {
-            userDTO.getUserAvatar().setBytes(getBytesByIdFromAvatar(userDTO.getUserAvatar().getId()));
+            userDTO.getUserAvatar().setBase64(Base64.getEncoder().encodeToString(getBytesByIdFromAvatar(userDTO.getUserAvatar().getId())));
         }
         if (userDTO.getUserBackground() != null) {
-            userDTO.getUserBackground().setBytes(getBytesByIdFromBackground(userDTO.getUserBackground().getId()));
+            userDTO.getUserBackground().setBase64(Base64.getEncoder().encodeToString(getBytesByIdFromBackground(userDTO.getUserBackground().getId())));
         }
         return userDTO;
     }
@@ -128,6 +130,7 @@ public class UsersServiceImpl implements UsersService {
 
             UUID uuid = UUID.randomUUID();
             var path = createDirectory(uuid, ROOT_PATH_AVATARS);
+            MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
 
             File avatar = new File(path, uuid + FileUtils.getFileExtension(file));
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(avatar));
@@ -135,7 +138,13 @@ public class UsersServiceImpl implements UsersService {
             stream.write(bytes);
             stream.close();
 
-            UserAvatarEntity userAvatarEntity = new UserAvatarEntity(uuid, name, file.getSize(), FileUtils.getFileExtension(file));
+
+            UserAvatarEntity userAvatarEntity = new UserAvatarEntity(
+                    uuid,
+                    name,
+                    file.getSize(),
+                    FileUtils.getFileExtension(file),
+                    fileTypeMap.getContentType(avatar));
             user.setUserAvatarEntity(userAvatarEntity);
             this.userAvatarRepository.save(userAvatarEntity);
             this.usersRepository.save(user);
@@ -167,6 +176,7 @@ public class UsersServiceImpl implements UsersService {
 
             UUID uuid = UUID.randomUUID();
             var path = createDirectory(uuid, ROOT_PATH_BACKGROUND);
+            MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
 
             File background = new File(path, uuid + FileUtils.getFileExtension(file));
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(background));
@@ -174,7 +184,13 @@ public class UsersServiceImpl implements UsersService {
             stream.write(bytes);
             stream.close();
 
-            UserBackgroundEntity userBackgroundEntity = new UserBackgroundEntity(uuid, name, file.getSize(), FileUtils.getFileExtension(file));
+            UserBackgroundEntity userBackgroundEntity = new UserBackgroundEntity(
+                    uuid,
+                    name,
+                    file.getSize(),
+                    FileUtils.getFileExtension(file),
+                    fileTypeMap.getContentType(background));
+
             user.setUserBackgroundEntity(userBackgroundEntity);
             userBackgroundRepository.save(userBackgroundEntity);
             usersRepository.save(user);
@@ -203,6 +219,7 @@ public class UsersServiceImpl implements UsersService {
         }
         return bytes;
     }
+
     private byte[] getBytesByIdFromBackground(UUID uuid) {
         UserBackgroundEntity userBackgroundEntity = userBackgroundRepository.getUserBackgroundById(
                 uuid).orElseThrow(
