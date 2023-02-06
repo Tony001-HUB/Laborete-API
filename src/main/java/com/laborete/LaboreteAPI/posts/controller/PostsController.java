@@ -47,5 +47,10 @@ public class PostsController {
         return new ResponseEntity<>(this.postsService.getPostById(id), HttpStatus.OK);
     }
 
+    @ApiOperation("Get posts filtered by searchValue")
+    @PostMapping({"/filter"})
+    private List<PostDTO> findByTextLike(@RequestBody String searchValue) {
+        return this.postsService.getFilteredPosts(searchValue);
+    }
 }
 

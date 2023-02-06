@@ -26,6 +26,7 @@ public class PostsServiceImpl implements PostsService {
     private static final String POST_TEXT_IS_REQUIRED = "Post cannot be without text";
     private static final String USER_CREATOR_IS_REQUIRED = "Post cannot be posted without User";
     private static final String UUID_REQUIRED = "Can`t find post without ID";
+    private static final String SEARCH_FIELD_EMPTY = "Search field is empty";
     private static final String POST_NOT_FOUND = "Post was not found with id:";
     @Autowired
     private PostRepository postRepository;
@@ -69,6 +70,11 @@ public class PostsServiceImpl implements PostsService {
         PostEntity postEntity = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post was not found with id:" + id));
         return postMapper.postEntityToPostDTO(postEntity);
 
+    }
+
+    public List<PostDTO> getFilteredPosts(String text) {
+        List<PostEntity> postEntities = postRepository.findByTextContainingIgnoreCase(text.trim());
+        return postMapper.postEntitiesListToPostDTOList(postEntities);
     }
 }
 

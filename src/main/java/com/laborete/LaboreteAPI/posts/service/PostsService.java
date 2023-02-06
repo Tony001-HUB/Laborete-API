@@ -11,5 +11,8 @@ public interface PostsService {
     PostDTO createPost(CreatePostDTO post);
 
     PostDTO getPostById(UUID id);
+
+    List<PostDTO> getFilteredPosts(String text);
+
 }
 
