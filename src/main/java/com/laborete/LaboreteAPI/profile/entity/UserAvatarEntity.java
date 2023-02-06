@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.UUID;
 
 @Setter
@@ -26,6 +28,9 @@ public class UserAvatarEntity {
 
     @Column
     private String extension;
+
+    @Column
+    private String mimeType;
 
 
 }

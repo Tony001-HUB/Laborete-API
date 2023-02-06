@@ -26,4 +26,6 @@ public class UserBackgroundEntity {
     private Long size;
     @Column
     private String extension;
+    @Column
+    private String mimeType;
 }
