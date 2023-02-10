@@ -1,0 +1,551 @@
+swagger: '2.0'
+info:
+  description: APIs for Laborete app.
+  version: '1.0'
+  title: Laborete
+  termsOfService: ...
+  contact:
+    name: Laborete
+    email: test@gmail.com
+  license:
+    name: License of API
+host: localhost:8080
+basePath: /
+tags:
+  - name: Posts
+    description: Posts Controller
+  - name: Users
+    description: Users Controller
+paths:
+  /v1/posts:
+    get:
+      tags:
+        - Posts
+      summary: Get all posts
+      operationId: getAllPostsUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PostDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - Posts
+      summary: Create new post
+      operationId: createPostUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: post
+          description: post
+          required: true
+          schema:
+            $ref: '#/definitions/CreatePostDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PostDTO'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /v1/posts/{id}:
+    get:
+      tags:
+        - Posts
+      summary: Get post by id
+      operationId: getPostByIdUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PostDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /v1/users:
+    post:
+      tags:
+        - Users
+      summary: Create new user
+      operationId: createUserUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: user
+          description: user
+          required: true
+          schema:
+            $ref: '#/definitions/CreateUserDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserDTO'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /v1/users/upload-avatar:
+    post:
+      tags:
+        - Users
+      summary: Upload avatar to user
+      operationId: uploadUserAvatarUsingPOST
+      consumes:
+        - multipart/form-data
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: file
+          description: file
+          required: true
+          schema:
+            type: string
+            format: binary
+        - name: name
+          in: query
+          description: name
+          required: true
+          type: string
+        - name: userId
+          in: query
+          description: userId
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+            enum:
+              - ACCEPTED
+              - ALREADY_REPORTED
+              - BAD_GATEWAY
+              - BAD_REQUEST
+              - BANDWIDTH_LIMIT_EXCEEDED
+              - CHECKPOINT
+              - CONFLICT
+              - CONTINUE
+              - CREATED
+              - DESTINATION_LOCKED
+              - EXPECTATION_FAILED
+              - FAILED_DEPENDENCY
+              - FORBIDDEN
+              - FOUND
+              - GATEWAY_TIMEOUT
+              - GONE
+              - HTTP_VERSION_NOT_SUPPORTED
+              - IM_USED
+              - INSUFFICIENT_SPACE_ON_RESOURCE
+              - INSUFFICIENT_STORAGE
+              - INTERNAL_SERVER_ERROR
+              - I_AM_A_TEAPOT
+              - LENGTH_REQUIRED
+              - LOCKED
+              - LOOP_DETECTED
+              - METHOD_FAILURE
+              - METHOD_NOT_ALLOWED
+              - MOVED_PERMANENTLY
+              - MOVED_TEMPORARILY
+              - MULTIPLE_CHOICES
+              - MULTI_STATUS
+              - NETWORK_AUTHENTICATION_REQUIRED
+              - NON_AUTHORITATIVE_INFORMATION
+              - NOT_ACCEPTABLE
+              - NOT_EXTENDED
+              - NOT_FOUND
+              - NOT_IMPLEMENTED
+              - NOT_MODIFIED
+              - NO_CONTENT
+              - OK
+              - PARTIAL_CONTENT
+              - PAYLOAD_TOO_LARGE
+              - PAYMENT_REQUIRED
+              - PERMANENT_REDIRECT
+              - PRECONDITION_FAILED
+              - PRECONDITION_REQUIRED
+              - PROCESSING
+              - PROXY_AUTHENTICATION_REQUIRED
+              - REQUESTED_RANGE_NOT_SATISFIABLE
+              - REQUEST_ENTITY_TOO_LARGE
+              - REQUEST_HEADER_FIELDS_TOO_LARGE
+              - REQUEST_TIMEOUT
+              - REQUEST_URI_TOO_LONG
+              - RESET_CONTENT
+              - SEE_OTHER
+              - SERVICE_UNAVAILABLE
+              - SWITCHING_PROTOCOLS
+              - TEMPORARY_REDIRECT
+              - TOO_EARLY
+              - TOO_MANY_REQUESTS
+              - UNAUTHORIZED
+              - UNAVAILABLE_FOR_LEGAL_REASONS
+              - UNPROCESSABLE_ENTITY
+              - UNSUPPORTED_MEDIA_TYPE
+              - UPGRADE_REQUIRED
+              - URI_TOO_LONG
+              - USE_PROXY
+              - VARIANT_ALSO_NEGOTIATES
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /v1/users/upload-background:
+    post:
+      tags:
+        - Users
+      summary: Upload background image to user
+      operationId: uploadUserBackgroundUsingPOST
+      consumes:
+        - multipart/form-data
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: file
+          description: file
+          required: true
+          schema:
+            type: string
+            format: binary
+        - name: name
+          in: query
+          description: name
+          required: true
+          type: string
+        - name: userId
+          in: query
+          description: userId
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+            enum:
+              - ACCEPTED
+              - ALREADY_REPORTED
+              - BAD_GATEWAY
+              - BAD_REQUEST
+              - BANDWIDTH_LIMIT_EXCEEDED
+              - CHECKPOINT
+              - CONFLICT
+              - CONTINUE
+              - CREATED
+              - DESTINATION_LOCKED
+              - EXPECTATION_FAILED
+              - FAILED_DEPENDENCY
+              - FORBIDDEN
+              - FOUND
+              - GATEWAY_TIMEOUT
+              - GONE
+              - HTTP_VERSION_NOT_SUPPORTED
+              - IM_USED
+              - INSUFFICIENT_SPACE_ON_RESOURCE
+              - INSUFFICIENT_STORAGE
+              - INTERNAL_SERVER_ERROR
+              - I_AM_A_TEAPOT
+              - LENGTH_REQUIRED
+              - LOCKED
+              - LOOP_DETECTED
+              - METHOD_FAILURE
+              - METHOD_NOT_ALLOWED
+              - MOVED_PERMANENTLY
+              - MOVED_TEMPORARILY
+              - MULTIPLE_CHOICES
+              - MULTI_STATUS
+              - NETWORK_AUTHENTICATION_REQUIRED
+              - NON_AUTHORITATIVE_INFORMATION
+              - NOT_ACCEPTABLE
+              - NOT_EXTENDED
+              - NOT_FOUND
+              - NOT_IMPLEMENTED
+              - NOT_MODIFIED
+              - NO_CONTENT
+              - OK
+              - PARTIAL_CONTENT
+              - PAYLOAD_TOO_LARGE
+              - PAYMENT_REQUIRED
+              - PERMANENT_REDIRECT
+              - PRECONDITION_FAILED
+              - PRECONDITION_REQUIRED
+              - PROCESSING
+              - PROXY_AUTHENTICATION_REQUIRED
+              - REQUESTED_RANGE_NOT_SATISFIABLE
+              - REQUEST_ENTITY_TOO_LARGE
+              - REQUEST_HEADER_FIELDS_TOO_LARGE
+              - REQUEST_TIMEOUT
+              - REQUEST_URI_TOO_LONG
+              - RESET_CONTENT
+              - SEE_OTHER
+              - SERVICE_UNAVAILABLE
+              - SWITCHING_PROTOCOLS
+              - TEMPORARY_REDIRECT
+              - TOO_EARLY
+              - TOO_MANY_REQUESTS
+              - UNAUTHORIZED
+              - UNAVAILABLE_FOR_LEGAL_REASONS
+              - UNPROCESSABLE_ENTITY
+              - UNSUPPORTED_MEDIA_TYPE
+              - UPGRADE_REQUIRED
+              - URI_TOO_LONG
+              - USE_PROXY
+              - VARIANT_ALSO_NEGOTIATES
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /v1/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by id
+      operationId: getUserByIdUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  AuthorDTO:
+    type: object
+    properties:
+      firstName:
+        type: string
+      id:
+        type: string
+        format: uuid
+      secondName:
+        type: string
+    title: AuthorDTO
+  CreatePostDTO:
+    type: object
+    properties:
+      text:
+        type: string
+      user-id:
+        type: string
+        format: uuid
+    title: CreatePostDTO
+  CreateUserDTO:
+    type: object
+    properties:
+      firstName:
+        type: string
+      generalInfo:
+        type: string
+      location:
+        type: string
+      position:
+        type: string
+      secondName:
+        type: string
+    title: CreateUserDTO
+  ImageDTO:
+    type: object
+    properties:
+      base64:
+        type: string
+      id:
+        type: string
+        format: uuid
+      mimeType:
+        type: string
+      name:
+        type: string
+    title: ImageDTO
+  ModelAndView:
+    type: object
+    properties:
+      empty:
+        type: boolean
+      model:
+        type: object
+      modelMap:
+        type: object
+        additionalProperties:
+          type: object
+      reference:
+        type: boolean
+      status:
+        type: string
+        enum:
+          - ACCEPTED
+          - ALREADY_REPORTED
+          - BAD_GATEWAY
+          - BAD_REQUEST
+          - BANDWIDTH_LIMIT_EXCEEDED
+          - CHECKPOINT
+          - CONFLICT
+          - CONTINUE
+          - CREATED
+          - DESTINATION_LOCKED
+          - EXPECTATION_FAILED
+          - FAILED_DEPENDENCY
+          - FORBIDDEN
+          - FOUND
+          - GATEWAY_TIMEOUT
+          - GONE
+          - HTTP_VERSION_NOT_SUPPORTED
+          - IM_USED
+          - INSUFFICIENT_SPACE_ON_RESOURCE
+          - INSUFFICIENT_STORAGE
+          - INTERNAL_SERVER_ERROR
+          - I_AM_A_TEAPOT
+          - LENGTH_REQUIRED
+          - LOCKED
+          - LOOP_DETECTED
+          - METHOD_FAILURE
+          - METHOD_NOT_ALLOWED
+          - MOVED_PERMANENTLY
+          - MOVED_TEMPORARILY
+          - MULTIPLE_CHOICES
+          - MULTI_STATUS
+          - NETWORK_AUTHENTICATION_REQUIRED
+          - NON_AUTHORITATIVE_INFORMATION
+          - NOT_ACCEPTABLE
+          - NOT_EXTENDED
+          - NOT_FOUND
+          - NOT_IMPLEMENTED
+          - NOT_MODIFIED
+          - NO_CONTENT
+          - OK
+          - PARTIAL_CONTENT
+          - PAYLOAD_TOO_LARGE
+          - PAYMENT_REQUIRED
+          - PERMANENT_REDIRECT
+          - PRECONDITION_FAILED
+          - PRECONDITION_REQUIRED
+          - PROCESSING
+          - PROXY_AUTHENTICATION_REQUIRED
+          - REQUESTED_RANGE_NOT_SATISFIABLE
+          - REQUEST_ENTITY_TOO_LARGE
+          - REQUEST_HEADER_FIELDS_TOO_LARGE
+          - REQUEST_TIMEOUT
+          - REQUEST_URI_TOO_LONG
+          - RESET_CONTENT
+          - SEE_OTHER
+          - SERVICE_UNAVAILABLE
+          - SWITCHING_PROTOCOLS
+          - TEMPORARY_REDIRECT
+          - TOO_EARLY
+          - TOO_MANY_REQUESTS
+          - UNAUTHORIZED
+          - UNAVAILABLE_FOR_LEGAL_REASONS
+          - UNPROCESSABLE_ENTITY
+          - UNSUPPORTED_MEDIA_TYPE
+          - UPGRADE_REQUIRED
+          - URI_TOO_LONG
+          - USE_PROXY
+          - VARIANT_ALSO_NEGOTIATES
+      view:
+        $ref: '#/definitions/View'
+      viewName:
+        type: string
+    title: ModelAndView
+  PostDTO:
+    type: object
+    properties:
+      author:
+        $ref: '#/definitions/AuthorDTO'
+      date:
+        type: string
+        format: date-time
+      id:
+        type: string
+        format: uuid
+      text:
+        type: string
+    title: PostDTO
+  UserDTO:
+    type: object
+    properties:
+      firstName:
+        type: string
+      generalInfo:
+        type: string
+      id:
+        type: string
+        format: uuid
+      location:
+        type: string
+      position:
+        type: string
+      secondName:
+        type: string
+      userAvatar:
+        $ref: '#/definitions/ImageDTO'
+      userBackground:
+        $ref: '#/definitions/ImageDTO'
+    title: UserDTO
+  View:
+    type: object
+    properties:
+      contentType:
+        type: string
+    title: View
