@@ -13,7 +13,6 @@ import com.laborete.LaboreteAPI.profile.repository.UserAvatarRepository;
 import com.laborete.LaboreteAPI.profile.repository.UserBackgroundRepository;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
 import com.laborete.LaboreteAPI.shared.common.FileUtils;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,25 +42,21 @@ public class UsersServiceImpl implements UsersService {
     private static final String FILE_IS_EMPTY = "The file cannot be empty";
     private static final String FILE_NAME_IS_EMPTY = "The file name cannot be empty";
     private static final String FILE_FAILED_UPLOAD = "Failed to upload file: ";
-
     private static final String FAILED_TO_EXTRACT_BYTES = "Failed to extract bytes";
     private static final String AVATAR_NOT_FOUND = "Avatar was not found";
-
     private static final String BACKGROUND_NOT_FOUND = "Background was not found";
     private static final String DIRECTORY_NOT_FOUND = "Directory was not found";
-
     private static final String ERROR_CREATING_DIRECTORY = "The directory was not created";
+
     private final UsersRepository usersRepository;
     private final UserAvatarRepository userAvatarRepository;
     private final UserBackgroundRepository userBackgroundRepository;
     private final UserMapper userMapper;
 
-
     @Value("${directory.path.avatars}")
     private String ROOT_PATH_AVATARS;
     @Value("${directory.path.background}")
     private String ROOT_PATH_BACKGROUND;
-
 
     public UsersServiceImpl(
             UsersRepository usersRepository,
@@ -74,7 +69,6 @@ public class UsersServiceImpl implements UsersService {
         this.userBackgroundRepository = userBackgroundRepository;
     }
 
-    @SneakyThrows
     public UserDTO getUserById(UUID id) {
         if (id == null) {
             throw new ResourceBadRequestException(UUID_IS_REQUIRED);
@@ -82,12 +76,22 @@ public class UsersServiceImpl implements UsersService {
         UserEntity user = this.usersRepository.getUserById(id).orElseThrow(
                 () -> new ResourceNotFoundException(USER_NOT_FOUND + id)
         );
-        UserDTO userDTO = userMapper.userEntityToUserDto(user);
+        var userDTO = userMapper.userEntityToUserDto(user);
         if (userDTO.getUserAvatar() != null) {
-            userDTO.getUserAvatar().setBase64(Base64.getEncoder().encodeToString(getBytesByIdFromAvatar(userDTO.getUserAvatar().getId())));
+            UUID avatarId = userDTO.getUserAvatar().getId();
+            userDTO.getUserAvatar()
+                    .setBase64(
+                            Base64.getEncoder()
+                                    .encodeToString(
+                                            getBytesOfAvatar(avatarId)));
         }
         if (userDTO.getUserBackground() != null) {
-            userDTO.getUserBackground().setBase64(Base64.getEncoder().encodeToString(getBytesByIdFromBackground(userDTO.getUserBackground().getId())));
+            UUID backgroundId = userDTO.getUserBackground().getId();
+            userDTO.getUserBackground()
+                    .setBase64(
+                            Base64.getEncoder()
+                                    .encodeToString(
+                                            getBytesOfBackground(backgroundId)));
         }
         return userDTO;
     }
@@ -130,7 +134,7 @@ public class UsersServiceImpl implements UsersService {
 
             UUID uuid = UUID.randomUUID();
             var path = createDirectory(uuid, ROOT_PATH_AVATARS);
-            MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
+            var fileTypeMap = new MimetypesFileTypeMap();
 
             File avatar = new File(path, uuid + FileUtils.getFileExtension(file));
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(avatar));
@@ -176,7 +180,7 @@ public class UsersServiceImpl implements UsersService {
 
             UUID uuid = UUID.randomUUID();
             var path = createDirectory(uuid, ROOT_PATH_BACKGROUND);
-            MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
+            var fileTypeMap = new MimetypesFileTypeMap();
 
             File background = new File(path, uuid + FileUtils.getFileExtension(file));
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(background));
@@ -204,12 +208,12 @@ public class UsersServiceImpl implements UsersService {
         }
     }
 
-    private byte[] getBytesByIdFromAvatar(UUID uuid) {
-        UserAvatarEntity userAvatarEntity = userAvatarRepository.getUserAvatarById(
-                uuid).orElseThrow(
-                () -> new ResourceNotFoundException(AVATAR_NOT_FOUND + uuid)
+    private byte[] getBytesOfAvatar(UUID avatarId) {
+        var userAvatarEntity = userAvatarRepository.getUserAvatarById(
+                avatarId).orElseThrow(
+                () -> new ResourceNotFoundException(AVATAR_NOT_FOUND + avatarId)
         );
-        String pathVar = getDirectory(uuid, ROOT_PATH_AVATARS) + "\\" + uuid + userAvatarEntity.getExtension();
+        var pathVar = getDirectory(avatarId, ROOT_PATH_AVATARS) + "\\" + avatarId + userAvatarEntity.getExtension();
         byte[] bytes;
 
         try {
@@ -220,12 +224,12 @@ public class UsersServiceImpl implements UsersService {
         return bytes;
     }
 
-    private byte[] getBytesByIdFromBackground(UUID uuid) {
-        UserBackgroundEntity userBackgroundEntity = userBackgroundRepository.getUserBackgroundById(
-                uuid).orElseThrow(
-                () -> new ResourceNotFoundException(BACKGROUND_NOT_FOUND + uuid)
+    private byte[] getBytesOfBackground(UUID backgroundId) {
+        var userBackgroundEntity = userBackgroundRepository.getUserBackgroundById(
+                backgroundId).orElseThrow(
+                () -> new ResourceNotFoundException(BACKGROUND_NOT_FOUND + backgroundId)
         );
-        String pathVar = getDirectory(uuid, ROOT_PATH_BACKGROUND) + "\\" + uuid + userBackgroundEntity.getExtension();
+        var pathVar = getDirectory(backgroundId, ROOT_PATH_BACKGROUND) + "\\" + backgroundId + userBackgroundEntity.getExtension();
         byte[] bytes;
 
         try {
@@ -237,18 +241,18 @@ public class UsersServiceImpl implements UsersService {
     }
 
 
-    private String createDirectory(UUID uuid, String parentDirectory) {
+    private String createDirectory(UUID imageId, String parentDirectory) {
         try {
             File directory = new File(Objects.requireNonNull(parentDirectory));
             if (!directory.exists()) {
                 Files.createDirectory(directory.toPath());
             }
 
-            var firstSymbol = uuid.toString().charAt(0);
+            var firstSymbol = imageId.toString().charAt(0);
             File firstSymbolDirectory = new File(parentDirectory + firstSymbol);
-            var secondSymbol = uuid.toString().charAt(1);
+            var secondSymbol = imageId.toString().charAt(1);
             File secondSymbolDirectory = new File(parentDirectory + firstSymbol + "\\" + secondSymbol);
-            var thirdSymbol = uuid.toString().charAt(2);
+            var thirdSymbol = imageId.toString().charAt(2);
             File thirdSymbolDirectory = new File(parentDirectory + firstSymbol + "\\" + secondSymbol + "\\" + thirdSymbol);
 
             if (!firstSymbolDirectory.exists()) {
@@ -268,11 +272,11 @@ public class UsersServiceImpl implements UsersService {
 
     }
 
-    private String getDirectory(UUID uuid, String parentDirectory) {
+    private String getDirectory(UUID imageId, String parentDirectory) {
         try {
-            var firstSymbol = uuid.toString().charAt(0);
-            var secondSymbol = uuid.toString().charAt(1);
-            var thirdSymbol = uuid.toString().charAt(2);
+            var firstSymbol = imageId.toString().charAt(0);
+            var secondSymbol = imageId.toString().charAt(1);
+            var thirdSymbol = imageId.toString().charAt(2);
 
             return parentDirectory + firstSymbol + "\\" + secondSymbol + "\\" + thirdSymbol;
         } catch (Exception e) {
