@@ -1,6 +1,7 @@
 package com.laborete.LaboreteAPI.posts.controller;
 
 import com.laborete.LaboreteAPI.posts.models.CreatePostDTO;
+import com.laborete.LaboreteAPI.posts.models.FilterDTO;
 import com.laborete.LaboreteAPI.posts.models.PostDTO;
 import com.laborete.LaboreteAPI.posts.service.PostsService;
 import io.swagger.annotations.Api;
@@ -49,8 +50,8 @@ public class PostsController {
 
     @ApiOperation("Get posts filtered by searchValue")
     @PostMapping({"/filter"})
-    private List<PostDTO> findByTextLike(@RequestBody String searchValue) {
-        return this.postsService.getFilteredPosts(searchValue);
+    private List<PostDTO> filterPosts(@RequestBody FilterDTO searchValue) {
+        return this.postsService.filterPosts(searchValue);
     }
 }
 
