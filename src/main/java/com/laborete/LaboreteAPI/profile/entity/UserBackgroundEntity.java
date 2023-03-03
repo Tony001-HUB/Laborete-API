@@ -12,25 +12,20 @@ import java.util.UUID;
 
 @Setter
 @Getter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserAvatarEntity {
+@Entity
+public class UserBackgroundEntity {
+
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
-
-    @Column
+    @Column()
     private String name;
-
     @Column
     private Long size;
-
     @Column
     private String extension;
-
     @Column
     private String mimeType;
-
-
 }

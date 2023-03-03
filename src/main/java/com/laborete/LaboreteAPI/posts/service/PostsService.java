@@ -3,6 +3,7 @@ package com.laborete.LaboreteAPI.posts.service;
 import com.laborete.LaboreteAPI.posts.models.CreatePostDTO;
 import com.laborete.LaboreteAPI.posts.models.FilterDTO;
 import com.laborete.LaboreteAPI.posts.models.PostDTO;
+
 import java.util.List;
 import java.util.UUID;
 

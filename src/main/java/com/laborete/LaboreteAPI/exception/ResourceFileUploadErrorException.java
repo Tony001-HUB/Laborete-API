@@ -3,7 +3,8 @@ package com.laborete.LaboreteAPI.exception;
 public class ResourceFileUploadErrorException extends RuntimeException {
     private String errorMessage;
     private Throwable cause;
-    public ResourceFileUploadErrorException(String message){
+
+    public ResourceFileUploadErrorException(String message) {
         super(message);
         this.errorMessage = message;
     }
