@@ -12,7 +12,10 @@ import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.repository.UserAvatarRepository;
 import com.laborete.LaboreteAPI.profile.repository.UserBackgroundRepository;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
+import com.laborete.LaboreteAPI.rsql.UserVisitor;
 import com.laborete.LaboreteAPI.shared.common.FileUtils;
+import cz.jirutka.rsql.parser.RSQLParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +31,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -48,26 +53,26 @@ public class UsersServiceImpl implements UsersService {
     private static final String DIRECTORY_NOT_FOUND = "Directory was not found";
     private static final String ERROR_CREATING_DIRECTORY = "The directory was not created";
 
-    private final UsersRepository usersRepository;
-    private final UserAvatarRepository userAvatarRepository;
-    private final UserBackgroundRepository userBackgroundRepository;
-    private final UserMapper userMapper;
+    @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    private UserAvatarRepository userAvatarRepository;
+
+    @Autowired
+    private UserBackgroundRepository userBackgroundRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private UserVisitor userVisitor;
+
 
     @Value("${directory.path.avatars}")
     private String ROOT_PATH_AVATARS;
     @Value("${directory.path.background}")
     private String ROOT_PATH_BACKGROUND;
 
-    public UsersServiceImpl(
-            UsersRepository usersRepository,
-            UserAvatarRepository userAvatarRepository,
-            UserMapper userMapper,
-            UserBackgroundRepository userBackgroundRepository) {
-        this.usersRepository = usersRepository;
-        this.userAvatarRepository = userAvatarRepository;
-        this.userMapper = userMapper;
-        this.userBackgroundRepository = userBackgroundRepository;
-    }
 
     public UserDTO getUserById(UUID id) {
         if (id == null) {
@@ -206,6 +211,17 @@ public class UsersServiceImpl implements UsersService {
         } catch (Exception e) {
             throw new ResourceFileUploadErrorException(FILE_FAILED_UPLOAD, e);
         }
+    }
+
+    @Override
+    public List<UserDTO> filterUsers(String rsqlFilter) {
+        var parser = new RSQLParser();
+        var root = parser.parse(rsqlFilter);
+
+        var spec = root.accept(new UserVisitor());
+        var userEntities = usersRepository.findAll(spec);
+
+        return userEntities.stream().map(userMapper::userEntityToUserDto).toList();
     }
 
     private byte[] getBytesOfAvatar(UUID avatarId) {
