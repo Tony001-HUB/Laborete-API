@@ -16,5 +16,7 @@ public interface PostsService {
 
     List<PostDTO> filterPosts(FilterDTO filter);
 
+    List<PostDTO> rsqlFilterPosts(String rsqlFilter);
+
 }
 

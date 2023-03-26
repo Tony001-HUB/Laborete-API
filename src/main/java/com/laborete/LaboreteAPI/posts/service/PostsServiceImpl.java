@@ -12,6 +12,8 @@ import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import com.laborete.LaboreteAPI.profile.mappers.UserMapper;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
+import com.laborete.LaboreteAPI.rsql.PostVisitor;
+import cz.jirutka.rsql.parser.RSQLParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PostsServiceImpl implements PostsService {
@@ -77,6 +80,18 @@ public class PostsServiceImpl implements PostsService {
         var searchValue = filter.getSearchValue().trim();
         List<PostEntity> postEntities = postRepository.findByTextContainingIgnoreCase(searchValue);
         return postMapper.postEntitiesListToPostDTOList(postEntities);
+    }
+
+    @Override
+    public List<PostDTO> rsqlFilterPosts(String rsqlFilter) {
+        var parser = new RSQLParser();
+        var root = parser.parse(rsqlFilter);
+
+        var spec = root.accept(new PostVisitor());
+        var postEntities = postRepository.findAll(spec);
+
+
+        return postEntities.stream().map(postMapper::postEntityToPostDTO).collect(Collectors.toList());
     }
 }
 

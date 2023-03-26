@@ -41,7 +41,7 @@ public class UsersController {
     }
 
     @ApiOperation(value = "Get users by filter")
-    @PostMapping("/")
+    @PostMapping("/rsqlFilter")
     private ResponseEntity<List<UserDTO>> filterUsers(String rsqlFilter) {
         return new ResponseEntity<>(usersService.filterUsers(rsqlFilter), HttpStatus.OK);
     }

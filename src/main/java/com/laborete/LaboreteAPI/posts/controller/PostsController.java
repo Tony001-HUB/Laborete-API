@@ -49,5 +49,11 @@ public class PostsController {
     private List<PostDTO> filterPosts(@RequestBody FilterDTO searchValue) {
         return this.postsService.filterPosts(searchValue);
     }
+
+    @ApiOperation("Get Posts by RsqlFilter")
+    @PostMapping("/rsqlFilter")
+    private ResponseEntity<List<PostDTO>> rsqlFilterPosts(String rsqlFilter) {
+        return new ResponseEntity<>(postsService.rsqlFilterPosts(rsqlFilter), HttpStatus.OK);
+    }
 }
 
