@@ -1,7 +1,6 @@
 package com.laborete.LaboreteAPI.rsql;
 
 import com.laborete.LaboreteAPI.posts.entity.PostEntity;
-import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import cz.jirutka.rsql.parser.ast.AndNode;
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.OrNode;
@@ -35,6 +34,24 @@ public class PostVisitor implements RSQLVisitor<Specification<PostEntity>, Void>
                 @Override
                 public Predicate toPredicate(Root<PostEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                     return criteriaBuilder.equal(root.get(fieldName), argument);
+                }
+            };
+        }
+
+        if (operator.equals("!=")) {
+            return new Specification<PostEntity>() {
+                @Override
+                public Predicate toPredicate(Root<PostEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.notEqual(root.get(fieldName), argument);
+                }
+            };
+        }
+
+        if (operator.equals(">=")) {
+            return new Specification<PostEntity>() {
+                @Override
+                public Predicate toPredicate(Root<PostEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.like(root.get(fieldName), argument);
                 }
             };
         }
