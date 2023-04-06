@@ -47,11 +47,38 @@ public class PostVisitor implements RSQLVisitor<Specification<PostEntity>, Void>
             };
         }
 
+        if (operator.equals(">")) {
+            return new Specification<PostEntity>() {
+                @Override
+                public Predicate toPredicate(Root<PostEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.greaterThan(root.get(fieldName), argument);
+                }
+            };
+        }
+
+        if (operator.equals("<")) {
+            return new Specification<PostEntity>() {
+                @Override
+                public Predicate toPredicate(Root<PostEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.lessThan(root.get(fieldName), argument);
+                }
+            };
+        }
+
         if (operator.equals(">=")) {
             return new Specification<PostEntity>() {
                 @Override
                 public Predicate toPredicate(Root<PostEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                    return criteriaBuilder.like(root.get(fieldName), argument);
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get(fieldName), argument);
+                }
+            };
+        }
+
+        if (operator.equals("<=")) {
+            return new Specification<PostEntity>() {
+                @Override
+                public Predicate toPredicate(Root<PostEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.lessThanOrEqualTo(root.get(fieldName), argument);
                 }
             };
         }

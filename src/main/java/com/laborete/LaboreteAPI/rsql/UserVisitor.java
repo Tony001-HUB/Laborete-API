@@ -49,15 +49,41 @@ public class UserVisitor implements RSQLVisitor<Specification<UserEntity>, Void>
             };
         }
 
-        if (operator.equals(">=")) {
+        if (operator.equals(">")) {
             return new Specification<UserEntity>() {
                 @Override
                 public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                    return criteriaBuilder.like(root.get(fieldName), argument);
+                    return criteriaBuilder.greaterThan(root.get(fieldName), argument);
                 }
             };
         }
 
+        if (operator.equals("<")) {
+            return new Specification<UserEntity>() {
+                @Override
+                public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.lessThan(root.get(fieldName), argument);
+                }
+            };
+        }
+
+        if (operator.equals(">=")) {
+            return new Specification<UserEntity>() {
+                @Override
+                public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get(fieldName), argument);
+                }
+            };
+        }
+
+        if (operator.equals("<=")) {
+            return new Specification<UserEntity>() {
+                @Override
+                public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.lessThanOrEqualTo(root.get(fieldName), argument);
+                }
+            };
+        }
 
         return null;
     }
