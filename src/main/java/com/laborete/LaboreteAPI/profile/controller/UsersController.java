@@ -2,10 +2,7 @@ package com.laborete.LaboreteAPI.profile.controller;
 
 import com.laborete.LaboreteAPI.profile.models.CreateUserDTO;
 import com.laborete.LaboreteAPI.profile.models.UserDTO;
-import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
-import com.laborete.LaboreteAPI.rsql.UserVisitor;
-import cz.jirutka.rsql.parser.RSQLParser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,7 @@ public class UsersController {
     }
 
     @ApiOperation(value = "Get users by filter")
-    @PostMapping("/rsqlFilter")
+    @PostMapping("/filter")
     private ResponseEntity<List<UserDTO>> filterUsers(String rsqlFilter) {
         return new ResponseEntity<>(usersService.filterUsers(rsqlFilter), HttpStatus.OK);
     }

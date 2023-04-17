@@ -12,7 +12,7 @@ import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.repository.UserAvatarRepository;
 import com.laborete.LaboreteAPI.profile.repository.UserBackgroundRepository;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
-import com.laborete.LaboreteAPI.rsql.UserVisitor;
+import com.laborete.LaboreteAPI.rsql.EntityVisitor;
 import com.laborete.LaboreteAPI.shared.common.FileUtils;
 import cz.jirutka.rsql.parser.RSQLParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +64,6 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private UserVisitor userVisitor;
 
 
     @Value("${directory.path.avatars}")
@@ -73,12 +71,13 @@ public class UsersServiceImpl implements UsersService {
     @Value("${directory.path.background}")
     private String ROOT_PATH_BACKGROUND;
 
+    private final RSQLParser parser = new RSQLParser();
 
     public UserDTO getUserById(UUID id) {
         if (id == null) {
             throw new ResourceBadRequestException(UUID_IS_REQUIRED);
         }
-        UserEntity user = this.usersRepository.getUserById(id).orElseThrow(
+        UserEntity user = usersRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(USER_NOT_FOUND + id)
         );
         var userDTO = userMapper.userEntityToUserDto(user);
@@ -122,7 +121,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Transactional
     public ResponseEntity<HttpStatus> uploadUserAvatar(String name, MultipartFile file, UUID userId) {
-        UserEntity user = this.usersRepository.getUserById(userId)
+        UserEntity user = usersRepository.findById(userId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(USER_NOT_FOUND + userId)
                 );
@@ -168,7 +167,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Transactional
     public ResponseEntity<HttpStatus> uploadUserBackground(String name, MultipartFile file, UUID userId) {
-        UserEntity user = this.usersRepository.getUserById(userId)
+        UserEntity user = usersRepository.findById(userId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(USER_NOT_FOUND + userId)
                 );
@@ -215,13 +214,12 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public List<UserDTO> filterUsers(String rsqlFilter) {
-        var parser = new RSQLParser();
         var root = parser.parse(rsqlFilter);
 
-        var spec = root.accept(new UserVisitor());
+        var spec = root.accept(new EntityVisitor<UserEntity>() {});
         var userEntities = usersRepository.findAll(spec);
 
-        return userEntities.stream().map(userMapper::userEntityToUserDto).toList();
+        return userMapper.userEntitiesListToUserDTOList(userEntities);
     }
 
     private byte[] getBytesOfAvatar(UUID avatarId) {

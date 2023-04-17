@@ -5,14 +5,13 @@ import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
 import com.laborete.LaboreteAPI.posts.entity.PostEntity;
 import com.laborete.LaboreteAPI.posts.mappers.PostMapper;
 import com.laborete.LaboreteAPI.posts.models.CreatePostDTO;
-import com.laborete.LaboreteAPI.posts.models.FilterDTO;
 import com.laborete.LaboreteAPI.posts.models.PostDTO;
 import com.laborete.LaboreteAPI.posts.repository.PostRepository;
 import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import com.laborete.LaboreteAPI.profile.mappers.UserMapper;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
-import com.laborete.LaboreteAPI.rsql.PostVisitor;
+import com.laborete.LaboreteAPI.rsql.EntityVisitor;
 import cz.jirutka.rsql.parser.RSQLParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class PostsServiceImpl implements PostsService {
@@ -43,6 +41,7 @@ public class PostsServiceImpl implements PostsService {
     @Autowired
     private UserMapper userMapper;
 
+    private final RSQLParser parser = new RSQLParser();
 
     public List<PostDTO> getAllPosts() {
         List<PostEntity> postEntities = postRepository.findAll();
@@ -58,7 +57,7 @@ public class PostsServiceImpl implements PostsService {
             throw new ResourceBadRequestException(USER_CREATOR_IS_REQUIRED);
         }
 
-        UserEntity user = usersRepository.getUserById(post.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User was not found with id:" + post.getUserId()));
+        UserEntity user = usersRepository.findById(post.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User was not found with id:" + post.getUserId()));
         PostEntity postEntity = postMapper.createPostDTOToPostEntity(post);
         postEntity.setCreationDate(LocalDateTime.now());
         postEntity.setUser(user);
@@ -76,22 +75,18 @@ public class PostsServiceImpl implements PostsService {
 
     }
 
-    public List<PostDTO> filterPosts(FilterDTO filter) {
-        var searchValue = filter.getSearchValue().trim();
-        List<PostEntity> postEntities = postRepository.findByTextContainingIgnoreCase(searchValue);
-        return postMapper.postEntitiesListToPostDTOList(postEntities);
-    }
 
     @Override
-    public List<PostDTO> rsqlFilterPosts(String rsqlFilter) {
-        var parser = new RSQLParser();
+    public List<PostDTO> filterPosts(String rsqlFilter) {
+
         var root = parser.parse(rsqlFilter);
 
-        var spec = root.accept(new PostVisitor());
+        var spec = root.accept(new EntityVisitor<PostEntity>() {
+        });
         var postEntities = postRepository.findAll(spec);
 
 
-        return postEntities.stream().map(postMapper::postEntityToPostDTO).collect(Collectors.toList());
+        return postMapper.postEntitiesListToPostDTOList(postEntities);
     }
 }
 
