@@ -47,7 +47,7 @@ public abstract class EntityVisitor<T> implements RSQLVisitor<Specification<T>, 
             };
         }
 
-        if (operator.equals(">")) {
+        if (operator.equals("=gt=")) {
             return new Specification<T>() {
                 @Override
                 public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -56,7 +56,7 @@ public abstract class EntityVisitor<T> implements RSQLVisitor<Specification<T>, 
             };
         }
 
-        if (operator.equals("<")) {
+        if (operator.equals("=lt=")) {
             return new Specification<T>() {
                 @Override
                 public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -65,7 +65,7 @@ public abstract class EntityVisitor<T> implements RSQLVisitor<Specification<T>, 
             };
         }
 
-        if (operator.equals(">=")) {
+        if (operator.equals("=ge=")) {
             return new Specification<T>() {
                 @Override
                 public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -74,7 +74,7 @@ public abstract class EntityVisitor<T> implements RSQLVisitor<Specification<T>, 
             };
         }
 
-        if (operator.equals("<=")) {
+        if (operator.equals("=le=")) {
             return new Specification<T>() {
                 @Override
                 public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {

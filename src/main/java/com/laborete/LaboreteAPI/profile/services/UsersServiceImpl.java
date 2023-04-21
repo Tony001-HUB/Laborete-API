@@ -52,6 +52,7 @@ public class UsersServiceImpl implements UsersService {
     private static final String BACKGROUND_NOT_FOUND = "Background was not found";
     private static final String DIRECTORY_NOT_FOUND = "Directory was not found";
     private static final String ERROR_CREATING_DIRECTORY = "The directory was not created";
+    private static final String BAD_AGE = "Entered age is not allowed";
 
     @Autowired
     private UsersRepository usersRepository;
@@ -112,6 +113,9 @@ public class UsersServiceImpl implements UsersService {
         }
         if (user.getPosition() == null || user.getPosition().isEmpty()) {
             throw new ResourceBadRequestException(POSITION_IS_REQUIRED);
+        }
+        if (user.getAge() < 16 || user.getAge() > 100) {
+            throw new ResourceBadRequestException(BAD_AGE);
         }
 
         return this.userMapper.userEntityToUserDto(
