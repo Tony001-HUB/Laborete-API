@@ -12,7 +12,10 @@ import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import com.laborete.LaboreteAPI.profile.repository.UserAvatarRepository;
 import com.laborete.LaboreteAPI.profile.repository.UserBackgroundRepository;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
+import com.laborete.LaboreteAPI.rsql.EntityVisitor;
 import com.laborete.LaboreteAPI.shared.common.FileUtils;
+import cz.jirutka.rsql.parser.RSQLParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +31,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -47,33 +52,34 @@ public class UsersServiceImpl implements UsersService {
     private static final String BACKGROUND_NOT_FOUND = "Background was not found";
     private static final String DIRECTORY_NOT_FOUND = "Directory was not found";
     private static final String ERROR_CREATING_DIRECTORY = "The directory was not created";
+    private static final String BAD_AGE = "Entered age is not allowed";
+    private static final String USERS_NOT_FOUND = "Users were not found with entered parameters";
 
-    private final UsersRepository usersRepository;
-    private final UserAvatarRepository userAvatarRepository;
-    private final UserBackgroundRepository userBackgroundRepository;
-    private final UserMapper userMapper;
+    @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    private UserAvatarRepository userAvatarRepository;
+
+    @Autowired
+    private UserBackgroundRepository userBackgroundRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     @Value("${directory.path.avatars}")
     private String ROOT_PATH_AVATARS;
     @Value("${directory.path.background}")
     private String ROOT_PATH_BACKGROUND;
 
-    public UsersServiceImpl(
-            UsersRepository usersRepository,
-            UserAvatarRepository userAvatarRepository,
-            UserMapper userMapper,
-            UserBackgroundRepository userBackgroundRepository) {
-        this.usersRepository = usersRepository;
-        this.userAvatarRepository = userAvatarRepository;
-        this.userMapper = userMapper;
-        this.userBackgroundRepository = userBackgroundRepository;
-    }
+    private final RSQLParser parser = new RSQLParser();
 
     public UserDTO getUserById(UUID id) {
         if (id == null) {
             throw new ResourceBadRequestException(UUID_IS_REQUIRED);
         }
-        UserEntity user = this.usersRepository.getUserById(id).orElseThrow(
+        UserEntity user = usersRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(USER_NOT_FOUND + id)
         );
         var userDTO = userMapper.userEntityToUserDto(user);
@@ -109,6 +115,9 @@ public class UsersServiceImpl implements UsersService {
         if (user.getPosition() == null || user.getPosition().isEmpty()) {
             throw new ResourceBadRequestException(POSITION_IS_REQUIRED);
         }
+        if (user.getAge() < 16 || user.getAge() > 100) {
+            throw new ResourceBadRequestException(BAD_AGE);
+        }
 
         return this.userMapper.userEntityToUserDto(
                 this.usersRepository.save(userMapper.createUserDTOToUserEntity(user))
@@ -117,7 +126,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Transactional
     public ResponseEntity<HttpStatus> uploadUserAvatar(String name, MultipartFile file, UUID userId) {
-        UserEntity user = this.usersRepository.getUserById(userId)
+        UserEntity user = usersRepository.findById(userId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(USER_NOT_FOUND + userId)
                 );
@@ -163,7 +172,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Transactional
     public ResponseEntity<HttpStatus> uploadUserBackground(String name, MultipartFile file, UUID userId) {
-        UserEntity user = this.usersRepository.getUserById(userId)
+        UserEntity user = usersRepository.findById(userId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(USER_NOT_FOUND + userId)
                 );
@@ -206,6 +215,21 @@ public class UsersServiceImpl implements UsersService {
         } catch (Exception e) {
             throw new ResourceFileUploadErrorException(FILE_FAILED_UPLOAD, e);
         }
+    }
+
+    @Override
+    public List<UserDTO> filterUsers(String rsqlFilter) {
+        var root = parser.parse(rsqlFilter);
+        var spec = root.accept(new EntityVisitor<UserEntity>() {
+        });
+
+        if (spec == null) {
+            throw new ResourceNotFoundException(USERS_NOT_FOUND);
+        }
+
+        var userEntities = usersRepository.findAll(spec);
+
+        return userMapper.userEntitiesListToUserDTOList(userEntities);
     }
 
     private byte[] getBytesOfAvatar(UUID avatarId) {

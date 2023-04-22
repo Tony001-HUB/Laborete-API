@@ -1,7 +1,6 @@
 package com.laborete.LaboreteAPI.posts.controller;
 
 import com.laborete.LaboreteAPI.posts.models.CreatePostDTO;
-import com.laborete.LaboreteAPI.posts.models.FilterDTO;
 import com.laborete.LaboreteAPI.posts.models.PostDTO;
 import com.laborete.LaboreteAPI.posts.service.PostsService;
 import io.swagger.annotations.Api;
@@ -44,10 +43,10 @@ public class PostsController {
         return new ResponseEntity<>(this.postsService.getPostById(id), HttpStatus.OK);
     }
 
-    @ApiOperation("Get posts filtered by searchValue")
-    @PostMapping({"/filter"})
-    private List<PostDTO> filterPosts(@RequestBody FilterDTO searchValue) {
-        return this.postsService.filterPosts(searchValue);
+    @ApiOperation("Get Posts by Anything")
+    @PostMapping("/filter")
+    private ResponseEntity<List<PostDTO>> rsqlFilterPosts(String rsqlFilter) {
+        return new ResponseEntity<>(postsService.filterPosts(rsqlFilter), HttpStatus.OK);
     }
 }
 

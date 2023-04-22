@@ -9,6 +9,8 @@ import com.laborete.LaboreteAPI.profile.models.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(
         componentModel = "spring"
 )
@@ -24,4 +26,6 @@ public interface UserMapper {
     ImageDTO userAvatarEntityToImageDTO(UserAvatarEntity user);
 
     ImageDTO userBackgroundEntityToImageDTO(UserBackgroundEntity user);
+
+    List<UserDTO> userEntitiesListToUserDTOList(List<UserEntity> userEntities);
 }
