@@ -30,6 +30,7 @@ public class PostsServiceImpl implements PostsService {
     private static final String UUID_REQUIRED = "Can`t find post without ID";
     private static final String SEARCH_FIELD_IS_EMPTY = "Search field is empty";
     private static final String POST_NOT_FOUND = "Post was not found with id:";
+    private static final String POSTS_NOT_FOUND = "Posts were not found with entered parameters";
     @Autowired
     private PostRepository postRepository;
     @Autowired
@@ -83,6 +84,9 @@ public class PostsServiceImpl implements PostsService {
 
         var spec = root.accept(new EntityVisitor<PostEntity>() {
         });
+        if (spec == null) {
+            throw new ResourceNotFoundException(POSTS_NOT_FOUND);
+        }
         var postEntities = postRepository.findAll(spec);
 
 

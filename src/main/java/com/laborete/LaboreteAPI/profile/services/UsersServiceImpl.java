@@ -53,6 +53,7 @@ public class UsersServiceImpl implements UsersService {
     private static final String DIRECTORY_NOT_FOUND = "Directory was not found";
     private static final String ERROR_CREATING_DIRECTORY = "The directory was not created";
     private static final String BAD_AGE = "Entered age is not allowed";
+    private static final String USERS_NOT_FOUND = "Users were not found with entered parameters";
 
     @Autowired
     private UsersRepository usersRepository;
@@ -219,8 +220,13 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public List<UserDTO> filterUsers(String rsqlFilter) {
         var root = parser.parse(rsqlFilter);
+        var spec = root.accept(new EntityVisitor<UserEntity>() {
+        });
 
-        var spec = root.accept(new EntityVisitor<UserEntity>() {});
+        if (spec == null) {
+            throw new ResourceNotFoundException(USERS_NOT_FOUND);
+        }
+
         var userEntities = usersRepository.findAll(spec);
 
         return userMapper.userEntitiesListToUserDTOList(userEntities);
