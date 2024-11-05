@@ -19,4 +19,6 @@ public class CreateUserDTO {
     private String location;
     @JsonProperty("generalInfo")
     private String generalInfo;
+    @JsonProperty("age")
+    private Integer age;
 }

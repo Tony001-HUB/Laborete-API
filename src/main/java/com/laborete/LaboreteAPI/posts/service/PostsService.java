@@ -1,7 +1,6 @@
 package com.laborete.LaboreteAPI.posts.service;
 
 import com.laborete.LaboreteAPI.posts.models.CreatePostDTO;
-import com.laborete.LaboreteAPI.posts.models.FilterDTO;
 import com.laborete.LaboreteAPI.posts.models.PostDTO;
 
 import java.util.List;
@@ -14,7 +13,7 @@ public interface PostsService {
 
     PostDTO getPostById(UUID id);
 
-    List<PostDTO> filterPosts(FilterDTO filter);
+    List<PostDTO> filterPosts(String rsqlFilter);
 
 }
 

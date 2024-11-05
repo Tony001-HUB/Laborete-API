@@ -5,13 +5,14 @@ import com.laborete.LaboreteAPI.exception.ResourceNotFoundException;
 import com.laborete.LaboreteAPI.posts.entity.PostEntity;
 import com.laborete.LaboreteAPI.posts.mappers.PostMapper;
 import com.laborete.LaboreteAPI.posts.models.CreatePostDTO;
-import com.laborete.LaboreteAPI.posts.models.FilterDTO;
 import com.laborete.LaboreteAPI.posts.models.PostDTO;
 import com.laborete.LaboreteAPI.posts.repository.PostRepository;
 import com.laborete.LaboreteAPI.profile.entity.UserEntity;
 import com.laborete.LaboreteAPI.profile.mappers.UserMapper;
 import com.laborete.LaboreteAPI.profile.repository.UsersRepository;
 import com.laborete.LaboreteAPI.profile.services.UsersService;
+import com.laborete.LaboreteAPI.rsql.EntityVisitor;
+import cz.jirutka.rsql.parser.RSQLParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class PostsServiceImpl implements PostsService {
     private static final String UUID_REQUIRED = "Can`t find post without ID";
     private static final String SEARCH_FIELD_IS_EMPTY = "Search field is empty";
     private static final String POST_NOT_FOUND = "Post was not found with id:";
+    private static final String POSTS_NOT_FOUND = "Posts were not found with entered parameters";
     @Autowired
     private PostRepository postRepository;
     @Autowired
@@ -40,6 +42,7 @@ public class PostsServiceImpl implements PostsService {
     @Autowired
     private UserMapper userMapper;
 
+    private final RSQLParser parser = new RSQLParser();
 
     public List<PostDTO> getAllPosts() {
         List<PostEntity> postEntities = postRepository.findAll();
@@ -55,7 +58,7 @@ public class PostsServiceImpl implements PostsService {
             throw new ResourceBadRequestException(USER_CREATOR_IS_REQUIRED);
         }
 
-        UserEntity user = usersRepository.getUserById(post.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User was not found with id:" + post.getUserId()));
+        UserEntity user = usersRepository.findById(post.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User was not found with id:" + post.getUserId()));
         PostEntity postEntity = postMapper.createPostDTOToPostEntity(post);
         postEntity.setCreationDate(LocalDateTime.now());
         postEntity.setUser(user);
@@ -73,9 +76,20 @@ public class PostsServiceImpl implements PostsService {
 
     }
 
-    public List<PostDTO> filterPosts(FilterDTO filter) {
-        var searchValue = filter.getSearchValue().trim();
-        List<PostEntity> postEntities = postRepository.findByTextContainingIgnoreCase(searchValue);
+
+    @Override
+    public List<PostDTO> filterPosts(String rsqlFilter) {
+
+        var root = parser.parse(rsqlFilter);
+
+        var spec = root.accept(new EntityVisitor<PostEntity>() {
+        });
+        if (spec == null) {
+            throw new ResourceNotFoundException(POSTS_NOT_FOUND);
+        }
+        var postEntities = postRepository.findAll(spec);
+
+
         return postMapper.postEntitiesListToPostDTOList(postEntities);
     }
 }

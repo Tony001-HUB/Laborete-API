@@ -25,6 +25,8 @@ public class UserDTO {
     private String location;
     @JsonProperty("generalInfo")
     private String generalInfo;
+    @JsonProperty("age")
+    private Integer age;
     @JsonProperty("userAvatar")
     private ImageDTO userAvatar;
     @JsonProperty("userBackground")

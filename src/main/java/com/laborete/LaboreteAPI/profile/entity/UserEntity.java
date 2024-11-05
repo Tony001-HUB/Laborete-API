@@ -3,7 +3,6 @@ package com.laborete.LaboreteAPI.profile.entity;
 import com.laborete.LaboreteAPI.posts.entity.PostEntity;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
@@ -32,6 +31,8 @@ public class UserEntity {
     private String location; //Todo Location API will be integrate
     @Column
     private String generalInfo;
+    @Column
+    private Integer age;
 
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "avatar_id")
